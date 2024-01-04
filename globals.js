@@ -1,4 +1,4 @@
-class Globals{
+export default class Globals{
     constructor(){
         this.colors = {
             canvasBg : '#3F4E4F',
