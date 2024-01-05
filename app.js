@@ -6,73 +6,96 @@ const ctx = canvas.getContext('2d')
 
 //canvas settings
 canvas.width = 1000;
-canvas.height = 1000;
-let nodePadding = 50;
-
+canvas.height = 800;
+var numberOfUniqueNumbers = 25;
+let nodeProperties = {
+  radius : canvas.width / (numberOfUniqueNumbers * 2.5),
+  startAngel : 0,
+  endAngel : Math.PI * 2,
+  padding : canvas.width / (numberOfUniqueNumbers ),
+  lineWidth :canvas.width / (numberOfUniqueNumbers * 10),
+  fontSize : canvas.width / (numberOfUniqueNumbers * 2.5)
+}
+console.log(nodeProperties.padding)
 
 //instances
 const globals = new Globals();
 const bTree = new BinaryTree();
-// bTree.addNode(5)
-// bTree.addNode(3)
-// bTree.addNode(4)
-// bTree.addNode(2)
-// bTree.addNode(1)
 
-
-
-
-console.log(bTree)
 
 // ->  setting background and canvas-bg colors
 document.getElementById("body").style.backgroundColor = globals.colors.bodyBg;
 canvas.style.backgroundColor = globals.colors.canvasBg;
 
+document.getElementById('startButton').addEventListener('click', startGame);
+
+
 let lastTimeStamp = 0;
-let refreshRate = 2000; // ms
+let refreshRate = 1; // ms
+
+function generateUniqueNumbers(count) {
+  if (count <= 0) {
+    return "Count should be a positive integer.";
+  }
+
+  var uniqueNumbers = [];
+  while (uniqueNumbers.length < count) {
+    var randomNumber = Math.floor(Math.random() * 100) + 1; 
+    if (uniqueNumbers.indexOf(randomNumber) === -1) {
+      uniqueNumbers.push(randomNumber);
+    }
+  }
+
+  return uniqueNumbers;
+}
+
+var result = generateUniqueNumbers(numberOfUniqueNumbers);
+let a = 0;
 function gameLoop(timeStamp){
     // node.draw(ctx);
 
-    bTree.drawTree();
+    if(!bTree.isEmpty()){
+      bTree.drawTree();
+    }
     if(timeStamp - lastTimeStamp >= refreshRate){
-
+        if(a<result.length){
+          bTree.addNode(result[a])
+          a++;
+        }
         lastTimeStamp = timeStamp;
     }
     window.requestAnimationFrame(gameLoop)
 }
 
-function generateUniqueNumbers(count) {
-    if (count <= 0) {
-      return "Count should be a positive integer.";
+// console.log(result)  
+// result.forEach(element => {
+//     bTree.addNode(element)
+// });
+function startGame() {
+    const inputNumber = prompt("Lütfen bir sayı girin (sadece sayılar):");
+
+    // Girilen değerin bir sayı olup olmadığını kontrol et
+    if (!isNaN(inputNumber)) {
+      // Girilen değeri bir sayıya çevir
+      const parsedNumber = parseInt(inputNumber, 10);
+
+      // Başka bir fonksiyonu çağır
+      handleInput(parsedNumber);
+
+      // Oyunu başlat
+    } else {
+      alert("Geçerli bir sayı girmediniz!");
     }
-  
-    var uniqueNumbers = [];
-    while (uniqueNumbers.length < count) {
-      var randomNumber = Math.floor(Math.random() * 100) + 1; // Örnek olarak 1 ile 100 arasında unique sayılar
-      if (uniqueNumbers.indexOf(randomNumber) === -1) {
-        uniqueNumbers.push(randomNumber);
-      }
-    }
-  
-    return uniqueNumbers;
-  }
-  
-  // Örnek kullanım:
-  var numberOfUniqueNumbers = 10;
-  var result = generateUniqueNumbers(numberOfUniqueNumbers);
-console.log(result)  
-result.forEach(element => {
-    bTree.addNode(element)
-});
+}
 
-
-bTree.inorderTreeWalk(bTree.root,0,0)
-
+function handleInput(parsedNumber){
+  bTree.search(bTree.root,parsedNumber)
+}
 
 export{
   canvas,
   ctx,
-  nodePadding
+  nodeProperties
 }
 
 gameLoop(0);

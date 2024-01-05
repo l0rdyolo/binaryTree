@@ -1,46 +1,22 @@
 
-import { ctx, canvas,nodePadding } from './app.js'
+import { ctx, canvas,nodeProperties } from './app.js'
+
 export default class Node {
     constructor(data) {
-
-        this.position = { x: 250, y: 50 }
-
+        this.position = { x: canvas.width/2, y: 100 }
         this.data = data;
         this.left = null;
         this.right = null;
-        this.radius = 10;
-        this.startAngel = 0;
-        this.endAngel = Math.PI * 2;
+
+        this.parent = null;
+        this.color = "orange"
     }
 
     show() {
-        ctx.beginPath();
-        ctx.arc(
-            this.position.x,
-            this.position.y,
-            this.radius,
-            this.startAngel,
-            this.endAngel
-        )
-        ctx.fillStyle = 'orange';
-        ctx.fill();
-        ctx.closePath();
-
-        ctx.beginPath();
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = 'black';
-        ctx.font = 'bold 10px serif';
-        ctx.fillText(
-            this.data,
-            this.position.x,
-            this.position.y
-        )
-        ctx.closePath();
-
         if (this.left) {
             ctx.moveTo(this.left.position.x, this.left.position.y)
             ctx.lineTo(this.position.x, this.position.y)
+            ctx.lineWidth = nodeProperties.lineWidth;
             ctx.stroke()
         }
         if (this.right) {
@@ -48,6 +24,31 @@ export default class Node {
             ctx.lineTo(this.position.x, this.position.y)
             ctx.stroke()
         }
+        ctx.beginPath();
+        ctx.arc(
+            this.position.x,
+            this.position.y,
+            nodeProperties.radius,
+            nodeProperties.startAngel,
+            nodeProperties.endAngel
+        )
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'black';
+        ctx.font = `bold ${nodeProperties.fontSize}px serif`;
+        ctx.fillText(
+            this.data,
+            this.position.x,
+            this.position.y
+        )
+        ctx.closePath();
+
+      
     }
 }
 
@@ -58,8 +59,9 @@ Node.prototype.addNode = function (val) {
     if (newNode.data < this.data) {
         if (this.left == null) {
             this.left = newNode
-            this.left.position.x = this.position.x - nodePadding 
-            this.left.position.y = this.position.y + nodePadding
+            this.left.parent = this;
+            this.left.position.x = this.left.parent.position.x - nodeProperties.padding 
+            this.left.position.y = this.left.parent.position.y + nodeProperties.padding
 
         } else {
             this.left.addNode(val)
@@ -68,16 +70,15 @@ Node.prototype.addNode = function (val) {
     else if (newNode.data >= this.data) {
         if (this.right == null) {
             this.right = newNode
-            this.right.position.x = this.position.x + nodePadding
-            this.right.position.y = this.position.y + nodePadding
+            this.right.parent = this;
+            this.right.position.x = this.right.parent.position.x + nodeProperties.padding
+            this.right.position.y = this.right.parent.position.y + nodeProperties.padding
 
 
         } else {
             this.right.addNode(val)
         }
     }
-
-
 }
 
 Node.prototype.draw = function () {
@@ -91,14 +92,14 @@ Node.prototype.draw = function () {
 
 Node.prototype.rescale = function (side) {
     // this.radius *= this.level;
-    if(this.level == 1){
-        console.log(this);
+    // if(this.level == 1){
+    //     console.log(this);
         
-        if(side == 1){
-            this.position.x = (canvas.width / 2) - 150
-        }
-        else if(side == 2){
-            this.position.x = (canvas.width / 2) + 150
-        }
-    }
+    //     if(side == 1){
+    //         this.position.x = (canvas.width / 2) - 150
+    //     }
+    //     else if(side == 2){
+    //         this.position.x = (canvas.width / 2) + 150
+    //     }
+    // }
 }
