@@ -5,11 +5,13 @@ import {canvas, nodeProperties} from "./app.js"
 export default class BinaryTree{
     constructor(){
         this.root;
-        this.level;
+        this.level=0;
     }
 }   
 
 BinaryTree.prototype.addNode = function(value){
+    // nodeAdd value
+    // setPosition 
     var newNode = new Node(value)
     if(this.root == null ){
         this.root = newNode
@@ -81,3 +83,31 @@ BinaryTree.prototype.search = function(node, searchValue){
     }
 }
 
+
+
+BinaryTree.prototype.visitLeft = function(node){ 
+    if(node != null){
+        node.position.x = node.parent.position.x - 100 - nodeProperties.padding
+        if(node.right){
+            node.right.position.x = node.position.x + 50
+            if(node.right.left){
+                this.visitLeft(node.left.right)        
+            }    
+        }
+        this.visitLeft(node.left)        
+    }
+}
+
+
+BinaryTree.prototype.visitRight = function(node){ 
+    if(node != null){
+        node.position.x = node.parent.position.x + 100 + nodeProperties.padding
+        if(node.left){
+            node.left.position.x = node.position.x - 20
+            if(node.left.right){
+                this.visitRight(node.left.right)        
+            }    
+        }
+        this.visitLeft(node.right )        
+    }
+}

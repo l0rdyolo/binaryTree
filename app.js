@@ -7,14 +7,20 @@ const ctx = canvas.getContext('2d')
 //canvas settings
 canvas.width = 1000;
 canvas.height = 800;
-var numberOfUniqueNumbers = 25;
+let sumsRightSpace = 0;
+let sumsLeftSpace = 0;
+
+
+var numberOfUniqueNumbers =15;
 let nodeProperties = {
   radius : canvas.width / (numberOfUniqueNumbers * 2.5),
   startAngel : 0,
   endAngel : Math.PI * 2,
   padding : canvas.width / (numberOfUniqueNumbers ),
-  lineWidth :canvas.width / (numberOfUniqueNumbers * 10),
-  fontSize : canvas.width / (numberOfUniqueNumbers * 2.5)
+  lineWidth : canvas.width / (numberOfUniqueNumbers * 10),
+  fontSize : canvas.width / (numberOfUniqueNumbers * 2.5),
+  HORIZONTAL_SPACE : 40,
+  VERTICAL_SPACE : 25
 }
 console.log(nodeProperties.padding)
 
@@ -31,7 +37,7 @@ document.getElementById('startButton').addEventListener('click', startGame);
 
 
 let lastTimeStamp = 0;
-let refreshRate = 1; // ms
+let refreshRate = 210; // ms
 
 function generateUniqueNumbers(count) {
   if (count <= 0) {
@@ -50,7 +56,13 @@ function generateUniqueNumbers(count) {
 }
 
 var result = generateUniqueNumbers(numberOfUniqueNumbers);
+result.forEach(elem =>{
+  bTree.addNode(elem)
+})
+
+
 let a = 0;
+let reposThem = false; 
 function gameLoop(timeStamp){
     // node.draw(ctx);
 
@@ -59,7 +71,7 @@ function gameLoop(timeStamp){
     }
     if(timeStamp - lastTimeStamp >= refreshRate){
         if(a<result.length){
-          bTree.addNode(result[a])
+          // bTree.addNode(result[a])
           a++;
         }
         lastTimeStamp = timeStamp;
@@ -92,10 +104,16 @@ function handleInput(parsedNumber){
   bTree.search(bTree.root,parsedNumber)
 }
 
+bTree.visitLeft(bTree.root.left)
+bTree.visitRight(bTree.root.right)
+
+
 export{
   canvas,
   ctx,
-  nodeProperties
+  nodeProperties,
+  sumsRightSpace,
+  sumsLeftSpace
 }
 
 gameLoop(0);

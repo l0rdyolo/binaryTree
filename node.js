@@ -1,5 +1,5 @@
 
-import { ctx, canvas,nodeProperties } from './app.js'
+import { ctx, canvas,nodeProperties ,sumsRightSpace , sumsLeftSpace} from './app.js'
 
 export default class Node {
     constructor(data) {
@@ -10,13 +10,21 @@ export default class Node {
 
         this.parent = null;
         this.color = "orange"
+
+
+        this.rightSpace = 0;
+        this.leftSpace = 0;
+
+        this.sumsRightSpace = 0;
+        this.sumsLeftSpace = 0;
+
     }
 
     show() {
+        ctx.lineWidth = nodeProperties.lineWidth;
         if (this.left) {
             ctx.moveTo(this.left.position.x, this.left.position.y)
             ctx.lineTo(this.position.x, this.position.y)
-            ctx.lineWidth = nodeProperties.lineWidth;
             ctx.stroke()
         }
         if (this.right) {
@@ -52,6 +60,9 @@ export default class Node {
     }
 }
 
+Node.prototype.setPosition = function(){
+
+}
 
 Node.prototype.addNode = function (val) {
     var newNode = new Node(val)
@@ -62,7 +73,6 @@ Node.prototype.addNode = function (val) {
             this.left.parent = this;
             this.left.position.x = this.left.parent.position.x - nodeProperties.padding 
             this.left.position.y = this.left.parent.position.y + nodeProperties.padding
-
         } else {
             this.left.addNode(val)
         }
