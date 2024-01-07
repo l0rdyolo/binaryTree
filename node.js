@@ -1,12 +1,15 @@
 
 import { ctx, canvas,nodeProperties ,sumsRightSpace , sumsLeftSpace} from './app.js'
 
+
 export default class Node {
     constructor(data) {
         this.position = { x: canvas.width/2, y: 100 }
         this.data = data;
         this.left = null;
         this.right = null;
+
+        this.level = 0;
 
         this.parent = null;
         this.color = "orange"
@@ -60,19 +63,27 @@ export default class Node {
     }
 }
 
-Node.prototype.setPosition = function(){
+Node.prototype.reposition = function(){
 
 }
 
 Node.prototype.addNode = function (val) {
     var newNode = new Node(val)
+    
+
 
     if (newNode.data < this.data) {
         if (this.left == null) {
             this.left = newNode
             this.left.parent = this;
-            this.left.position.x = this.left.parent.position.x - nodeProperties.padding 
-            this.left.position.y = this.left.parent.position.y + nodeProperties.padding
+            this.left.level = this.level + 1;
+            // this.left.position.x = this.left.parent.position.x - (1 / Math.pow(2,this.left.level)) * nodeProperties.padding
+            this.left.position.x = this.left.parent.position.x - ((1/ Math.pow(1.75,this.left.level)) * nodeProperties.padding)
+            
+
+  
+            // this.left.position.x = this.left.parent.position.x - nodeProperties.padding 
+            this.left.position.y = this.left.parent.position.y + (nodeProperties.yPadding * (this.left.level / 3 ))
         } else {
             this.left.addNode(val)
         }
@@ -81,8 +92,15 @@ Node.prototype.addNode = function (val) {
         if (this.right == null) {
             this.right = newNode
             this.right.parent = this;
-            this.right.position.x = this.right.parent.position.x + nodeProperties.padding
-            this.right.position.y = this.right.parent.position.y + nodeProperties.padding
+            this.right.level = this.level + 1;
+
+            // this.right.position.x = this.right.parent.position.x + (1 / Math.pow(2,this.right.level)) * nodeProperties.padding
+            this.right.position.x = this.right.parent.position.x + ((1/Math.pow(1.75,this.right.level)) * nodeProperties.padding)
+
+            this.right.position.y = this.right.parent.position.y + (nodeProperties.yPadding * (this.right.level / 3))
+
+            // this.right.position.x = this.right.parent.position.x + nodeProperties.padding
+            // this.right.position.y = this.right.parent.position.y + nodeProperties.padding
 
 
         } else {

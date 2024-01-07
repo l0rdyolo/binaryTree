@@ -5,20 +5,22 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d')
 
 //canvas settings
-canvas.width = 1000;
-canvas.height = 800;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 let sumsRightSpace = 0;
 let sumsLeftSpace = 0;
 
+let _maxLevel = { value: 0 };
 
-var numberOfUniqueNumbers =15;
+var numberOfUniqueNumbers =100;
 let nodeProperties = {
-  radius : canvas.width / (numberOfUniqueNumbers * 2.5),
+  radius : canvas.width / (numberOfUniqueNumbers * 2),
   startAngel : 0,
   endAngel : Math.PI * 2,
-  padding : canvas.width / (numberOfUniqueNumbers ),
-  lineWidth : canvas.width / (numberOfUniqueNumbers * 10),
-  fontSize : canvas.width / (numberOfUniqueNumbers * 2.5),
+  padding :400,
+  yPadding : canvas.height / (numberOfUniqueNumbers *0.5 ),
+  lineWidth : canvas.width / (numberOfUniqueNumbers * 50),
+  fontSize : canvas.width / (numberOfUniqueNumbers * 2),
   HORIZONTAL_SPACE : 40,
   VERTICAL_SPACE : 25
 }
@@ -56,6 +58,8 @@ function generateUniqueNumbers(count) {
 }
 
 var result = generateUniqueNumbers(numberOfUniqueNumbers);
+// var result = [12,6,13,17,11,2,9,8,7,5]
+
 result.forEach(elem =>{
   bTree.addNode(elem)
 })
@@ -104,8 +108,10 @@ function handleInput(parsedNumber){
   bTree.search(bTree.root,parsedNumber)
 }
 
-bTree.visitLeft(bTree.root.left)
-bTree.visitRight(bTree.root.right)
+// bTree.visitLeft(bTree.root.left)
+// bTree.visitRight(bTree.root.right)
+bTree.findMaxLevel(bTree.root , _maxLevel)
+console.log(_maxLevel);
 
 
 export{
@@ -113,7 +119,7 @@ export{
   ctx,
   nodeProperties,
   sumsRightSpace,
-  sumsLeftSpace
+  sumsLeftSpace,
 }
 
 gameLoop(0);

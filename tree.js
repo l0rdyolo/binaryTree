@@ -15,11 +15,13 @@ BinaryTree.prototype.addNode = function(value){
     var newNode = new Node(value)
     if(this.root == null ){
         this.root = newNode
+        this.root.level = 0;
         this.root.position.x = canvas.width/2
         this.root.position.y = 100
+        this.root.radius = nodeProperties.radius * 2
     } 
     else{
-        this.root.addNode(value)
+        this.root.addNode(value)        
     }
 }
 BinaryTree.prototype.drawTree = function(){
@@ -83,8 +85,6 @@ BinaryTree.prototype.search = function(node, searchValue){
     }
 }
 
-
-
 BinaryTree.prototype.visitLeft = function(node){ 
     if(node != null){
         node.position.x = node.parent.position.x - 100 - nodeProperties.padding
@@ -98,7 +98,6 @@ BinaryTree.prototype.visitLeft = function(node){
     }
 }
 
-
 BinaryTree.prototype.visitRight = function(node){ 
     if(node != null){
         node.position.x = node.parent.position.x + 100 + nodeProperties.padding
@@ -110,4 +109,19 @@ BinaryTree.prototype.visitRight = function(node){
         }
         this.visitLeft(node.right )        
     }
+}
+
+BinaryTree.prototype.reposition = function(node){
+
+}
+
+BinaryTree.prototype.findMaxLevel = function(node, maxLevel){
+        if(node != null){
+            if(node.level > maxLevel.value){
+                maxLevel.value = node.level;
+            }
+            
+            this.findMaxLevel(node.left , maxLevel )
+            this.findMaxLevel(node.right ,maxLevel )
+        }
 }
